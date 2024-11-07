@@ -1,28 +1,20 @@
-import { Game, Group, Sprite, Point, Sound } from './paradigm/engine/class.game.mjs'
+import { Game, Keyboard } from './paradigm/engine/index.mjs'
 import { World } from './game/class.world.mjs'
-import { Explode } from './game/class.explode.mjs'
-
-
-
-
+import { Tank } from './game/class.tank.mjs'
 
 const game = new Game();
-game.pause = true;
-
-
-
-
+game.pause = false;
 
 // инициализация
 game.once('engine.init', () => {
     console.log('engine.init');
-    game.loader.baseURL = '';
+    game.loader.baseURL = './';
 });
 
 // предзагрузка
 game.once('engine.preload', () => {
     console.log('engine.preload');
-    
+
     // game.loader.image.load('desert', '/images/desert.real.png', '/images/desert.json');
 
     game.loader.on('progress', progress => {
@@ -41,18 +33,24 @@ game.once('engine.create', () => {
 
 
     game.world = new World(game, 256, 256);
+    // game.world.angle = 30;y
 
-    const sprite = new Sprite(game, 'desert', 200, 200);
-    sprite.atlas.frame = 7;
-    game.scene.add(sprite)
+    // const sprite = new Sprite(game, 'desert', 200, 200);
+    // sprite.atlas.frame = 7;
+    // game.scene.add(sprite)
 
 
-    setInterval(()=>{
-        // запускаем анимацию взрыва в координатах цели
-        const explodePoint = new Point( game.mouse.x, game.mouse.y );
-        const explode = new Explode(game, explodePoint, 0);
-        game.scene.add(explode);
-    }, 1000)
+    game.tank = new Tank(game, game.world, 200, 0);
+    game.world.setFocus(game.tank);
+
+
+
+    // setInterval(()=>{
+    //     // запускаем анимацию взрыва в координатах цели
+    //     const explodePoint = new Point( game.mouse.x, game.mouse.y );
+    //     const explode = new Explode(game, explodePoint, 0);
+    //     game.scene.add(explode);
+    // }, 1000)
 
 
     window.addEventListener("wheel", e => {
@@ -72,6 +70,28 @@ game.once('engine.create', () => {
 
     });
 
+    game.keyboard = new Keyboard({
+        'W': (status, key) => {
+            if (status === 'press') game.tank.moving = 1;
+            else if (status === 'up') game.tank.moving = 0;
+        },
+        'S': (status, key) => {
+            if (status === 'press') game.tank.moving = -1;
+            else if (status === 'up') game.tank.moving = 0;
+        },
+        'A': (status, key, timer) => {
+            if (status !== 'press') return
+            game.tank.rotate -= game.tank.options.bodyRotateSpeed * timer.deltaTime;
+        },
+        'D': (status, key, timer) => {
+            if (status !== 'press') return
+            game.tank.rotate += game.tank.options.bodyRotateSpeed * timer.deltaTime;
+        }
+
+
+    }, this);
+
+    game.keyboard.start();
 
 
 });
@@ -79,12 +99,29 @@ game.once('engine.create', () => {
 
 
 // обновление
-game.on('engine.update', (dt) => {
-    // console.log('engine.update', dt);
+game.on('engine.update', (timer) => {
     if (game.pause) return;
+    if (!game.tank) return;
+    // console.log('engine.update', timer);    
+    game.keyboard.update(timer);
+
+    game.tank.target = {
+        x: game.mouse.x,
+        y: game.mouse.y,
+    };
+
+    // if (game.mouse.buttons.right) {
+    //     game.tank.moving = true;
+    // } else {
+    //     game.tank.moving = false;
+    // }
+
+    if (game.mouse.buttons.left) {
+        // game.tank.requestFire();  
+        game.tank.fire();
+    }
 
 });
-
 
 
 

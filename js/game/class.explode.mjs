@@ -1,36 +1,27 @@
-import { Group, Sprite, Point, bus } from '../paradigm/engine/class.game.mjs'
+import { Group, Sprite } from '../paradigm/engine/index.mjs'
+import bus from '/js/tools/tool.events.bus.mjs'
 
 bus.once('engine.init', game => {
-
 });
 
 bus.once('engine.preload', game => {
     game.loader.image.load('explode', '/images/assets.explode.png', '/images/assets.explode.json');
-
     game.loader.audio.load('explode', '/sounds/explode.02.mp3');
 });
 
 bus.once('engine.create', game => {
-    // game.loader.image.tint('explode_wite', 'explode', 0.5, 0, 1.0, 0.0);
 });
-
-
-
 
 export class Explode extends Group {
     #time = 0;
     #startTime = 0;
-
     #duration = 800;
 
     constructor(game, position, time) {
         super(game, position.x, position.y);
         this.#startTime = time / 2;
-
         this.visible = false;
-
         this.explodeSound = game.loader.audio.get('explode');
-
 
         const sign = Math.round(Math.random()) * 2 - 1
 
@@ -51,15 +42,10 @@ export class Explode extends Group {
             this.explodeSound.play(0.7);
         }
 
-
-
         const q = this.#time / this.#duration;
 
         const explodeFrameIndex = Math.floor(this.explodeSprite.atlas.frameDataList.length * q);
         this.explodeSprite.atlas.frameName = ('000' + explodeFrameIndex).substr(-3);
-
-        // const sparksFrameIndex = Math.floor(this.sparksSprite.atlas.frameDataList.length * q);
-        // this.sparksSprite.atlas.frameName = ('000' + sparksFrameIndex).substr(-3);
 
         this.opacity = 1 - q;
 
@@ -69,4 +55,3 @@ export class Explode extends Group {
         }
     }
 }
-

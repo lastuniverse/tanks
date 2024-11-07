@@ -1,13 +1,9 @@
 import ExtendEventEmitter from './class.extend.event.emitter.mjs'
 
-// const location = new URL(window.location.toString());
-
 const protocol = {
     "http:": "ws:",
     "https:": "wss:",
 };
-
-
 
 export class WS extends ExtendEventEmitter {
     #queue = [];
@@ -22,8 +18,6 @@ export class WS extends ExtendEventEmitter {
     constructor(options = {}) {
         super();
         this.#URL = Object.assign(this.#URL, options);
-
-
         this.#connect();
     }
 
@@ -37,7 +31,6 @@ export class WS extends ExtendEventEmitter {
 
         this.socket.onmessage = event => {
             const message = JSON.parse(event.data);
-            // console.log('socket.onmessage', message.data);
             this.emit(message.name, ...message.data);
         };
 
@@ -54,15 +47,14 @@ export class WS extends ExtendEventEmitter {
         };
     }
 
-    #clearSocketHandlers(){
-        this.socket.onclose = ()=>{};
-        this.socket.onerror = ()=>{};
-        this.socket.onopen = ()=>{};
-        this.socket.onmessage = ()=>{};
+    #clearSocketHandlers() {
+        this.socket.onclose = () => { };
+        this.socket.onerror = () => { };
+        this.socket.onopen = () => { };
+        this.socket.onmessage = () => { };
     }
 
     #sendQueue() {
-        // console.log('ws.#sendQueue()');
         if (this.socket.readyState !== 1) return;
         while (this.#queue.length) {
             if (this.socket.readyState !== 1) return;

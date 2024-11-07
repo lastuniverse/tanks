@@ -12,6 +12,7 @@
 // allowing more colour into the image, but making it appear washed out.
 // Default: 0
 //
+
 export function tint(img, hue=0.6, saturation=0.6, white=1, black=0) {
     const newPixels = hsvFilter(getPixels(img), function(pixel) {
         pixel[0] = hue;
@@ -76,8 +77,7 @@ function putPixels(ctx, rgb, width, height) {
     ctx.putImageData(imageData, 0, 0);
 }
 
-// adapted from from http://www.easyrgb.com/index.php?X=MATH
-
+// adapted from http://www.easyrgb.com/index.php?X=MATH
 function rgbToHsv(rgb, buffer) {
     buffer = buffer || [];
     var r = rgb[0] / 255,

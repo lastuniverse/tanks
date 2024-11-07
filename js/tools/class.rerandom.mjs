@@ -5,9 +5,6 @@ export class Rerandom {
 	#p3 = 3266489917;
 	#p4 = 668265263;
 	#p5 = 374761393;
-	
-	// #cut = 4294967295;
-
 
 	constructor(seed=0){
 		this.#seed = seed;
@@ -70,9 +67,7 @@ export class Rerandom {
 		h32 ^= h32 >>> 16;
 
 		return (h32>>>0)/4294967295.0;
-
 	};
-
 }
 
 

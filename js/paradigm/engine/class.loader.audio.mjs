@@ -1,13 +1,12 @@
-import { BaseLoader, Loader, cacheURLs } from './class.loader.mjs'
+import { BaseLoader, Loader } from './class.loader.mjs'
 import { audioContext, Sound } from './class.sound.mjs'
-
-
 
 export class AudioLoader extends BaseLoader {
     constructor(loader) {
         super();
 
         if (!loader instanceof Loader) return;
+
         this.loader = loader;
         this.loader.audio = this;
 
@@ -31,7 +30,6 @@ export class AudioLoader extends BaseLoader {
                 this.cache.insert(name, new Sound(audioBuffer));
             });
     }
-
 }
 
 

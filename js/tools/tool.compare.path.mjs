@@ -23,10 +23,6 @@
 
 
 const re = /[\\\/\.]/;
-// console.log('/aaa/bbb', '/aaa/bbb'.split(re));
-// console.log('aaa/bbb', 'aaa/bbb'.split(re));
-// console.log('.aaa.bbb', '.aaa.bbb'.split(re));
-// console.log('aaa.bbb', 'aaa.bbb'.split(re));
 
 /**
  * Функция сравнивает пути и шаблоны путей
@@ -57,27 +53,6 @@ export default function comparePaths(pathName1, pathName2) {
 
     return isEqual;
 }
-
-
-// console.log('aaa', 'aaa',                       comparePaths('aaa', 'aaa')  );
-// console.log('aaa', 'bbb',                       comparePaths('aaa', 'bbb')  );
-// console.log('aaa.bbb', 'aaa.bbb',                       comparePaths('aaa.bbb', 'aaa.bbb')  );
-// console.log('aaa.bbb', 'aaa.ccc',                       comparePaths('aaa.bbb', 'aaa.ccc')  );
-// console.log('aaa.*', 'aaa',                     comparePaths('aaa.*', 'aaa')    );
-// console.log('aaa.*', 'aaa.*',                       comparePaths('aaa.*', 'aaa.*')  );
-// console.log('/aaa/*', 'aaa/bbb',                     comparePaths('aaa.*', 'aaa.bbb')    );
-// console.log('aaa.*.ccc', 'aaa',                     comparePaths('aaa.*.ccc', 'aaa')    );
-// console.log('aaa.*.ccc', 'aaa.*',                       comparePaths('aaa.*.ccc', 'aaa.*')  );
-// console.log('aaa.*.ccc', 'aaa.bbb',                     comparePaths('aaa.*.ccc', 'aaa.bbb')    );
-// console.log('aaa.*.*', 'aaa.bbb',                       comparePaths('aaa.*.*', 'aaa.bbb')  );
-// console.log('aaa.*.ccc', 'aaa.bbb.*',                       comparePaths('aaa.*.ccc', 'aaa.bbb.*')  );
-// console.log('aaa.*.ccc', 'aaa.bbb.ccc',                     comparePaths('aaa.*.ccc', 'aaa.bbb.ccc')    );
-// console.log('*', 'aaa',                     comparePaths('*', 'aaa')    );
-// console.log('*', 'aaa.bbb',                     comparePaths('*', 'aaa.bbb')    );
-// console.log('*', 'aaa.bbb.ccc',                     comparePaths('*', 'aaa.bbb.ccc')    );
-
-
-
 
 
 

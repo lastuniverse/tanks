@@ -1,73 +1,9 @@
-// import { Cache } from './class.cache.js'
 import { tint } from '/js/tools/image.tint.mjs'
 import { BaseLoader, Loader, cacheURLs } from './class.loader.mjs'
-
-
-// export const cacheURLs = new Cache();
-
-
-// img.frames = {
-//     '0': {
-//         "frame": {
-//             "x": 0,
-//             "y": 0,
-//             "w": img.width,
-//             "h": img.height
-//         },
-//         "rotated": false,
-//         "trimmed": true,
-//         "spriteSourceSize": {
-//             "x": 0,
-//             "y": 3,
-//             "w": 117,
-//             "h": 48
-//         },
-//         "sourceSize": {
-//             "w": 117,
-//             "h": 51
-//         },
-//         "pivot": {
-//             "x": 0.5,
-//             "y": 0.5
-//         }
-//     }
-// };
-
 
 export class Frames {
     #frame;
     #frameName = 'default';
-    get frame() {
-        return this.#frame;
-    }
-    set frame(value) {
-        if (typeof value === 'number') {
-            const frame = this.frameDataList[value];
-            if (!frame) return;
-            this.#frame = frame;
-            this.#frameName = frame.name;
-            this.width = frame.frame.w;
-            this.height = frame.frame.h;
-
-        } else {
-            this.frameName = value;
-        }
-    }
-
-    get frameName() {
-        return this.#frameName;
-    }
-    set frameName(value) {
-        if (typeof value === 'string') {
-            const frame = this.frameDataHash[value];
-            if (!frame) return;
-            this.#frame = frame;
-            this.#frameName = value;
-            this.width = frame.frame.w;
-            this.height = frame.frame.h;
-        }
-    }
-
 
     constructor(image, data) {
         this.image = image;
@@ -103,11 +39,46 @@ export class Frames {
             this.frameDataHash = {
                 default: this.#frame
             };
+
             this.frameDataList = [
                 this.#frame
             ];
+
             this.width = this.image.width;
             this.height = this.image.height;
+        }
+    }
+
+    get frame() {
+        return this.#frame;
+    }
+
+    set frame(value) {
+        if (typeof value === 'number') {
+            const frame = this.frameDataList[value];
+            if (!frame) return;
+            this.#frame = frame;
+            this.#frameName = frame.name;
+            this.width = frame.frame.w;
+            this.height = frame.frame.h;
+
+        } else {
+            this.frameName = value;
+        }
+    }
+
+    get frameName() {
+        return this.#frameName;
+    }
+
+    set frameName(value) {
+        if (typeof value === 'string') {
+            const frame = this.frameDataHash[value];
+            if (!frame) return;
+            this.#frame = frame;
+            this.#frameName = value;
+            this.width = frame.frame.w;
+            this.height = frame.frame.h;
         }
     }
 
@@ -134,10 +105,8 @@ export class Frames {
     }
 }
 
-
-
-
 export class ImageLoader extends BaseLoader {
+
     constructor(loader) {
         super();
 
@@ -154,7 +123,6 @@ export class ImageLoader extends BaseLoader {
     load(name, imageURL, atlasURL) {
         if (!name || typeof name !== 'string') throw `Name must be a non-empty string`;
         if (this.cache.get(name)) throw `Image with name '${name}' already loaded. Change image name for load.`;
-
 
         this.amount++;
         const img = new Image();
@@ -174,7 +142,6 @@ export class ImageLoader extends BaseLoader {
 
                     img.src = this.baseURL + imageURL;
                 });
-
         } else {
             const img = new Image();
             img.addEventListener('load', () => {
@@ -198,13 +165,9 @@ export class ImageLoader extends BaseLoader {
 
         if (!sourceFrames) throw `Image with sourceName '${sourceName}' not found in cache. You must download it before using it.`
 
-
         const destinationImage = tint(sourceFrames.image, hue, saturation, white, black);
         const destinationFrames = new Frames(destinationImage, sourceFrames);
 
         this.cache.insert(name, destinationFrames);
     }
 }
-
-
-

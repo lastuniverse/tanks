@@ -6,10 +6,8 @@ const defaultVectorOptions = {
 	rotateSpeed: 0,
 };
 
-
-
-
 export class Vector2 {
+
 	constructor(x, y, type) {
 		this.init(x, y, type);
 	}
@@ -36,12 +34,12 @@ export class Vector2 {
 		return this;
 	};
 
-
 	rotate(deltaAngle) {
 		this.angle += deltaAngle * Math.PI / 180;
 		this.x = this.length * Math.cos(this.angle);
 		this.y = this.length * Math.sin(this.angle);
 	}
+
 	rotateRad(deltaAngle) {
 		this.angle += deltaAngle;
 		this.x = this.length * Math.cos(this.angle);
@@ -104,6 +102,7 @@ export class Vector2 {
 	unit() {
 		return this.divide(this.length());
 	};
+
 	normalize() {
 		return this.divide(this.length())
 	};
@@ -118,7 +117,6 @@ export class Vector2 {
 
 	// получение угла между вектором и осью X
 	toAngle() {
-		// return Math.asin(this.y / this.length());
 		return Math.atan2(this.y, this.x);
 	};
 

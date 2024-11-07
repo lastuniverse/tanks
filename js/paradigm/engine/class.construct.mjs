@@ -9,7 +9,6 @@ const defaultOptions = {
 
 };
 
-
 export class Constuct {
     constructor(options = {}) {
         Object.assign(this, { ...defaultOptions, ...options });
@@ -18,24 +17,23 @@ export class Constuct {
         this.add('base', undefined, 0, { x: 0, y: 0 }, { x: 0, y: 0 }, 0);
         this.base = this.components['base'];
         this.base.position = this.position = new Vector2(this.position.x, this.position.y);
-
-
     }
 
     get x() {
         return this.base.position.x;
     }
+
     set x(value) {
         this.base.position.x = typeof value === 'number' ? value : 0;
     }
+
     get y() {
         return this.base.position.y;
     }
+
     set y(value) {
         this.base.position.y = typeof value === 'number' ? value : 0;
     }
-
-
 
     add(name, parentName, connect = 0, offset = { x: 0, y: 0 }, vector = { x: 0, y: 0 }, display) {
         if (!name || typeof name !== 'string') throw `Сomponent name must be a non-empty string in construct '${this.name}'`;
@@ -69,10 +67,6 @@ export class Constuct {
             this.components[name].vector = new Vector2(0, 0, 'grad');
         }
 
-        // pivot: (new Vector2(vector.x, vector.y)).multiply(pivot),
-
-
-
         if (!this.base) {
             this.base = this.components[name];
             return;
@@ -80,14 +74,10 @@ export class Constuct {
 
         this.angle = this.base.vector.angle;
 
-
         if (!parentName || typeof parentName !== 'string') throw `Сomponent parentName must be a non-empty string in construct '${this.name}'`;
-
         if (parentName === name) throw `Parent '${parentName}' name cannot be the same as component name '${name}' in construct '${this.name}'`;
-
         if (!this.components[parentName]) throw `Parent component '${parentName}' is epsent in construct '${this.name}'`;
 
-        // this.components[name].parent = this.components[parentName];
         this.components[name].connect = this.components[parentName].vector.multiply(connect);
         this.components[parentName].childrens[name] = this.components[name];
     }
@@ -99,7 +89,6 @@ export class Constuct {
         const rotate = (component) => {
             if (component.name !== name) component.offset.rotate(deltaAngle);
             component.vector.rotate(deltaAngle);
-
 
             Object.values(component.childrens).forEach(item => {
                 if (component.name === item.name) return;
@@ -128,11 +117,9 @@ export class Constuct {
 
         rotate(this.components[name]);
         this.angle = this.base.vector.angle;
-    }    
+    }
 
     update(dt) {
-        
-
         const update = (parent, component) => {
             component.connect = parent.vector.multiply(component.connectScalar);
             component.position = parent.position.add(component.connect).add(component.offset);
@@ -154,34 +141,7 @@ export class Constuct {
     }
 
     draw() {
-
         const draw = (component) => {
-
-            // this.context.fillStyle = this.color;
-            // this.context.strokeStyle = this.color;
-            // this.context.lineWidth = this.lineWidth;
-
-            // // this.context.fillRect(this.position.x-20, this.position.y-20, 40, 40);
-            // this.context.strokeRect(component.position.x - 2, component.position.y - 2, 4, 4);
-
-
-            // this.context.beginPath();
-            // this.context.moveTo(component.position.x, component.position.y);
-            // this.context.lineTo(
-            //     component.position.x + component.vector.x,
-            //     component.position.y + component.vector.y
-            // );
-            // this.context.stroke();
-
-            // this.context.arc(
-            //     component.position.x + component.vector.x,
-            //     component.position.y + component.vector.y,
-            //     2,
-            //     0,
-            //     2 * Math.PI
-            // );
-            // this.context.stroke();
-
             Object.values(component.childrens).forEach(item => {
                 if (component.name === item.name) return;
                 draw(item);
@@ -206,22 +166,15 @@ export class Constuct {
                 if (component.display.strokeStyle) this.context.stroke();
             } else if (component.display.type === 'rect') {
                 this.context.beginPath();
-                
+
                 this.context.translate(component.position.x, component.position.y);
                 this.context.rotate(component.vector.angle);
 
-                if (component.display.fillStyle) this.context.fillRect(-component.display.width/2, -component.display.height/2, component.display.width, component.display.height);
-                if (component.display.strokeStyle) this.context.strokeRect(-component.display.width/2, -component.display.height/2, component.display.width, component.display.height);
-                // this.context.rotate(-component.vector.angle);
-                // this.context.translate(0, 0);
+                if (component.display.fillStyle) this.context.fillRect(-component.display.width / 2, -component.display.height / 2, component.display.width, component.display.height);
+                if (component.display.strokeStyle) this.context.strokeRect(-component.display.width / 2, -component.display.height / 2, component.display.width, component.display.height);
                 this.context.setTransform(1, 0, 0, 1, 0, 0);
-
-
             }
         }
         draw(this.base);
-
     }
-
-
-};
+}

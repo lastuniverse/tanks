@@ -6,22 +6,22 @@ export class Mouse extends ExtendEventEmitter {
     buttons = {};
     touth = false;
 
-    constructor(canvas){
+    constructor(canvas) {
         super();
         this.canvas = canvas;
-        
+
         const buttons = ['left', 'center', 'right'];
-        
+
         window.oncontextmenu = e => false;
 
         this.canvas.addEventListener('mousedown', e => {
             this.buttons[buttons[e.button]] = true
-            this.emit('down', buttons[e.button] );
+            this.emit('down', buttons[e.button]);
         });
 
         this.canvas.addEventListener('mouseup', e => {
             this.buttons[buttons[e.button]] = false
-            this.emit('up', buttons[e.button] );
+            this.emit('up', buttons[e.button]);
         });
 
         this.canvas.addEventListener('mousemove', e => {
@@ -30,8 +30,7 @@ export class Mouse extends ExtendEventEmitter {
             this.emit('move', this);
         });
 
-        const toushStartHandle = e=>{
-            // console.log(e)
+        const toushStartHandle = e => {
             e = e.changedTouches[0];
             this.x = e.pageX - e.target.offsetLeft;
             this.y = e.pageY - e.target.offsetTop;
@@ -40,36 +39,18 @@ export class Mouse extends ExtendEventEmitter {
             this.emit('down', 'left');
             this.emit('move', this);
         }
-        
+
         this.canvas.addEventListener("touchstart", toushStartHandle, false);
         this.canvas.addEventListener("touchmove", toushStartHandle, false);
-        this.canvas.addEventListener("touchend", e=>{
+        this.canvas.addEventListener("touchend", e => {
             this.touth = false;
             this.buttons.left = false;
             this.emit('up', 'left');
         }, false);
-        this.canvas.addEventListener("touchcancel", e=>{
+        this.canvas.addEventListener("touchcancel", e => {
             this.touth = false;
             this.buttons.left = false;
             this.emit('up', 'left');
         }, false);
-
-
-
-
     }
-    
 }
-
-        
-
-        
-        
-        
-// const toush = {
-//     position: new Point(),
-//     press: false
-// };
-
-
-

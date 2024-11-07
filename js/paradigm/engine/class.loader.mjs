@@ -1,10 +1,7 @@
 import ExtendEventEmitter from '/js/tools/class.extend.event.emitter.mjs'
 import { Cache } from './class.cache.mjs'
 
-
 export const cacheURLs = new Cache();
-
-
 
 export class BaseLoader extends ExtendEventEmitter {
     #amount = 0;
@@ -16,7 +13,6 @@ export class BaseLoader extends ExtendEventEmitter {
         this.cache = new Cache();
         this.baseURL = baseURL;
     }
-
 
     get isLoad() {
         return (this.#count === this.#amount)
@@ -33,6 +29,7 @@ export class BaseLoader extends ExtendEventEmitter {
     get amount() {
         return this.#amount;
     }
+
     set amount(value) {
         const delta = value - this.#amount;
         this.#amount = value;
@@ -45,6 +42,7 @@ export class BaseLoader extends ExtendEventEmitter {
     get count() {
         return this.#count;
     }
+
     set count(value) {
         const delta = value - this.#count;
         this.#count = value;
@@ -58,13 +56,12 @@ export class BaseLoader extends ExtendEventEmitter {
 
         if (!this.loader) return;
         this.loader.count += delta;
-
-
     }
 
     get baseURL() {
         return this.#baseURL;
     }
+    
     set baseURL(value) {
         if (typeof value !== 'string') throw `URL must be a non-empty string'`;
         this.#baseURL = value;
@@ -94,8 +91,6 @@ export class BaseLoader extends ExtendEventEmitter {
     }
 
 }
-
-
 
 export class Loader extends BaseLoader {
     constructor(baseURL = '/') {

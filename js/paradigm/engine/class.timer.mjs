@@ -4,23 +4,21 @@ export class Timer extends ExtendEventEmitter {
     #parentTime = 0;
     #timers = {};
     #speed = 1
-
     time = 0;
     deltaTime = 0;
+
+    constructor() {
+        super();
+        setTimeout(() => this.#loop(Date.now()), 0)
+    }
 
     get speed() {
         return this.#speed
     }
+
     set speed(value) {
         if (typeof value !== 'number') throw `Speed must be a number`
         return this.#speed = value;
-    }
-
-
-    constructor() {
-        super();
-        // window.requestAnimationFrame(time => this.#loop(time));
-        setTimeout(() => this.#loop(Date.now()), 0)
     }
 
     create(name, fps = 60) {
@@ -37,7 +35,6 @@ export class Timer extends ExtendEventEmitter {
             frameTime: 1000 / fps,
 
         };
-        // console.log(this.#timers[name])
     }
 
     destroy(name) {
@@ -57,8 +54,7 @@ export class Timer extends ExtendEventEmitter {
 
             if (timer.__elapsed < timer.frameTime) return;
 
-            // console.log(timer.count);
-            timer.deltaFrame = timer.deltaTime/timer.frameTime;
+            timer.deltaFrame = timer.deltaTime / timer.frameTime;
             timer.speed = this.#speed;
             this.emit(timer.name, timer);
 
@@ -69,10 +65,6 @@ export class Timer extends ExtendEventEmitter {
         })
 
         this.#parentTime = time;
-
-
-        // window.requestAnimationFrame(time => this.#loop(time));
         setTimeout(() => this.#loop(Date.now()), 1)
-
     }
 }
