@@ -10,6 +10,7 @@ const defaultOptions = {
 };
 
 export class Constuct {
+
     constructor(options = {}) {
         Object.assign(this, { ...defaultOptions, ...options });
 

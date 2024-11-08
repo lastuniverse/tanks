@@ -1,4 +1,5 @@
 export class Cache {
+
     constructor() {
         this.list = {};
     }

@@ -1,11 +1,3 @@
-// параметры объекта Collider по умолчанию
-const defaultVectorOptions = {
-	position: { x: 100, y: 100 },
-	color: '#000',
-	lineWidth: 2,
-	rotateSpeed: 0,
-};
-
 export class Vector2 {
 
 	constructor(x, y, type) {
@@ -147,79 +139,6 @@ export class Vector2 {
 			y: this.y
 		}
 	}
-	// Vector2.fromAngle = function(angle) {
-	// 	return new Vector2(Math.cos(angle), Math.sin(angle));
-	// };
-	// Vector2.randomDirection = function() {
-	// 	return Vector2.fromAngle(Math.random() * Math.PI * 2);
-	// };
-	// Vector2.min = function(a, b) {
-	// 	return new Vector2(Math.min(a.x, b.x), Math.min(a.y, b.y));
-	// };
-	// Vector2.max = function(a, b) {
-	// 	return new Vector2(Math.max(a.x, b.x), Math.max(a.y, b.y));
-	// };
-	// Vector2.lerp = function(a, b, fraction) {
-	// 	return b.subtract(a).multiply(fraction).add(a);
-	// };
-	// Vector2.fromArray = function(a) {
-	// 	return new Vector2(a[0], a[1]);
-	// };
-	// Vector2.angleBetween = function(a, b) {
-	// 	return a.angleTo(b);
-	// };	
-
-
-
-
-	setOptions(options = {}) {
-		Object.assign(this, { ...defaultVectorOptions, ...options });
-	}
-
-	update(dt) {
-
-		if (this.rotateSpeed) {
-			const da = Math.PI * 2 * dt / 1000 * this.rotateSpeed;
-			this.angle += da;
-			// console.log(dt)
-			this.x = this.length * Math.cos(this.angle);
-			this.y = this.length * Math.sin(this.angle);
-		}
-
-
-		this.draw();
-	}
-
-	draw() {
-		this.context.fillStyle = this.color;
-		this.context.strokeStyle = this.color;
-		this.context.lineWidth = this.lineWidth;
-
-		// this.context.fillRect(this.position.x-20, this.position.y-20, 40, 40);
-		this.context.strokeRect(this.position.x - 2, this.position.y - 2, 4, 4);
-
-
-		this.context.beginPath();
-		this.context.moveTo(this.position.x, this.position.y);
-		this.context.lineTo(
-			this.position.x + this.x,
-			this.position.y + this.y
-		);
-		this.context.stroke();
-
-		this.context.arc(
-			this.position.x + this.x,
-			this.position.y + this.y,
-			2,
-			0,
-			2 * Math.PI
-		);
-		this.context.stroke();
-
-
-
-	}
-
 };
 
 

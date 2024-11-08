@@ -1,18 +1,4 @@
-import { Vector2 } from './class.vector.js'
-
-// параметры объекта Collider по умолчанию
-const defaultColliderOptions = {
-    type: 'circle',
-    x: 0,
-    y: 0,
-    radius: 0,
-};
-
-class Collider {
-    constructor(options = {}) {
-        Object.assign(this, { ...defaultColliderOptions, ...options });
-    }
-}
+import { Collider } from './class.collider.mjs'
 
 // параметры объекта Entity по умолчанию
 const defaultEntityOptions = {
@@ -27,6 +13,7 @@ const defaultEntityOptions = {
 };
 
 export class Entity {
+
     constructor(options = {}) {
         Object.assign(this, { ...defaultEntityOptions, ...options });
         this.collider = new Collider({

@@ -1,4 +1,5 @@
 export class Keyboard {
+
 	constructor(lesteners = {}, context) {
 		this.keys = {};
 		this.keyList = [];

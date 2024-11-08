@@ -5,11 +5,14 @@ import { Timer } from './class.timer.mjs'
 import { ImageLoader } from './class.loader.image.mjs'
 import { AudioLoader } from './class.loader.audio.mjs'
 import { Mouse } from './class.mouse.mjs'
-import { Group, Sprite, Point } from './class.group.mjs'
+import { Point } from './class.point.mjs'
+import { Group } from './class.group.mjs'
+
 
 export class Game extends ExtendEventEmitter {
     #scenes = {};
     #scenesList = [];
+
     constructor(width, height) {
         super();
 
@@ -20,13 +23,14 @@ export class Game extends ExtendEventEmitter {
         this.canvas = document.createElement('canvas');
         this.context = this.canvas.getContext('2d');
         this.context.scale(1, 1);
-        // window.devicePixelRatio
 
         this.canvas.id = 'canvas';
         this.canvas.style.zIndex = 8;
         this.canvas.style.position = 'absolute';
+
         var body = document.getElementsByTagName('body')[0];
         body.appendChild(this.canvas)
+
         this.resize(width, height);
 
         // инициализация мышки
@@ -42,27 +46,29 @@ export class Game extends ExtendEventEmitter {
 
         // инициализация сцены
         this.addScene('main');
+        
+        setTimeout(() => this.#onMustInit(), 0);
+    }
 
-        setTimeout(() => {
-            this.bus.emit('engine.init', this);
-            this.emit('engine.init', this);
+    #onMustInit() {
+        this.loader.once('load', progress => this.#onLoad());
 
+        this.bus.emit('engine.init', this);
+        this.emit('engine.init', this);
 
-            this.bus.emit('engine.preload', this);
-            this.emit('engine.preload', this);
+        this.bus.emit('engine.preload', this);
+        this.emit('engine.preload', this);
+    }
 
+    #onLoad() {
+        this.bus.emit('engine.create', this);
+        this.emit('engine.create', this);
+        this.ready = true;
 
-            this.loader.once('load', progress => {
-                this.bus.emit('engine.create', this);
-                this.emit('engine.create', this);
-                this.ready = true;
-
-                this.timer.create('engine.timer', 60);
-                this.timer.on('engine.timer', timer => {
-                    this.#loop(timer);
-                });
-            });
-        }, 0);
+        this.timer.create('engine.timer', 60);
+        this.timer.on('engine.timer', timer => {
+            this.#loop(timer);
+        });
     }
 
     addScene(name, isActive = true) {

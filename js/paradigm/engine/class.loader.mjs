@@ -3,7 +3,7 @@ import { Cache } from './class.cache.mjs'
 
 export const cacheURLs = new Cache();
 
-export class BaseLoader extends ExtendEventEmitter {
+export class Loader extends ExtendEventEmitter {
     #amount = 0;
     #count = 0;
     #baseURL = '/';
@@ -92,11 +92,6 @@ export class BaseLoader extends ExtendEventEmitter {
 
 }
 
-export class Loader extends BaseLoader {
-    constructor(baseURL = '/') {
-        super(baseURL);
-    }
-}
 
 
 

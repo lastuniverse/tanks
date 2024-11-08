@@ -47,6 +47,7 @@ export class Mouse extends ExtendEventEmitter {
             this.buttons.left = false;
             this.emit('up', 'left');
         }, false);
+        
         this.canvas.addEventListener("touchcancel", e => {
             this.touth = false;
             this.buttons.left = false;

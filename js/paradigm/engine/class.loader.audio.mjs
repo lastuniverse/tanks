@@ -1,7 +1,8 @@
-import { BaseLoader, Loader } from './class.loader.mjs'
+import { Loader } from './class.loader.mjs'
 import { audioContext, Sound } from './class.sound.mjs'
 
-export class AudioLoader extends BaseLoader {
+export class AudioLoader extends Loader {
+
     constructor(loader) {
         super();
 
