@@ -31,6 +31,9 @@ export class Explode extends Group {
         this.add(this.explodeSprite);
     }
 
+    set tintBrightness(value) {
+	}
+
     update(timer) {
         this.#startTime -= timer.deltaTime;
         if (this.#startTime > 0) return;
