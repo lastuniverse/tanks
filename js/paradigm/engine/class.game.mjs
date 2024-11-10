@@ -1,5 +1,5 @@
-import ExtendEventEmitter from '/js/tools/class.extend.event.emitter.mjs'
-import bus from '/js/tools/tool.events.bus.mjs'
+import ExtendEventEmitter from '../../tools/class.extend.event.emitter.mjs'
+import bus from '../../tools/tool.events.bus.mjs'
 import { Loader } from './class.loader.mjs'
 import { Timer } from './class.timer.mjs'
 import { ImageLoader } from './class.loader.image.mjs'

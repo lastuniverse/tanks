@@ -1,5 +1,5 @@
 import { Group, Sprite } from '../paradigm/engine/index.mjs'
-import bus from '/js/tools/tool.events.bus.mjs'
+import bus from '../tools/tool.events.bus.mjs'
 
 bus.once('engine.init', game => {
 });

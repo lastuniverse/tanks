@@ -8,7 +8,7 @@ game.pause = false;
 // инициализация
 game.once('engine.init', () => {
     console.log('engine.init');
-    game.loader.baseURL = './';
+    game.loader.baseURL = window.location.href;
 });
 
 // предзагрузка

@@ -1,6 +1,6 @@
-import { Group, Sprite, Point } from '/js/paradigm/engine/index.mjs'
-import { Rerandom } from '/js/tools/class.rerandom.mjs'
-import bus from '/js/tools/tool.events.bus.mjs'
+import { Group, Sprite, Point } from '../paradigm/engine/index.mjs'
+import { Rerandom } from '../tools/class.rerandom.mjs'
+import bus from '../tools/tool.events.bus.mjs'
 
 const prng = new Rerandom(4);
 

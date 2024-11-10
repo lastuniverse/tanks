@@ -1,4 +1,4 @@
-import { tint } from '/js/tools/image.tint.mjs'
+import { tint } from '../../tools/image.tint.mjs'
 import { Loader} from './class.loader.mjs'
 import { Frames } from './class.frames.mjs'
 

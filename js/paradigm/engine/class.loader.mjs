@@ -1,4 +1,4 @@
-import ExtendEventEmitter from '/js/tools/class.extend.event.emitter.mjs'
+import ExtendEventEmitter from '../../tools/class.extend.event.emitter.mjs'
 import { Cache } from './class.cache.mjs'
 
 export const cacheURLs = new Cache();
