@@ -2,6 +2,7 @@ export class Frames {
     #frame;
     #frameName = 'default';
     _tint;
+    _brightness;
     _tintImage;
 
     constructor(image, data) {
@@ -54,8 +55,23 @@ export class Frames {
     }
 
     set tint(value) {
-        if(this._tint == value) return;
+        if (this._tint == value) return;
         this._tint = value;
+        this.generateTintedFrame();
+    }
+
+    get tintBrightness() {
+        return this._brightness ?? 0.5;
+    }
+
+    set tintBrightness(value) {
+        if (!isFinite(value)) {
+            this._brightness = undefined
+            return;
+        }
+        value = Math.min(1, Math.max(0, value));
+        if (this._brightness == value) return;
+        this._brightness = value;
         this.generateTintedFrame();
     }
 
@@ -105,10 +121,11 @@ export class Frames {
 
     draw(context, x, y, w, h) {
         const frame = this.#frame.frame;
+        const isTinted = this._tint || isFinite(this._brightness);
         context.drawImage(
-            this._tint ? this._tintImage : this.image,
-            this._tint ? 0 : frame.x,
-            this._tint ? 0 : frame.y,
+            isTinted ? this._tintImage : this.image,
+            isTinted ? 0 : frame.x,
+            isTinted ? 0 : frame.y,
             frame.w, frame.h,
             x, y,
             w, h
@@ -116,7 +133,7 @@ export class Frames {
     }
 
     generateTintedFrame() {
-        if (!this._tint) return;
+        if (!this._tint && !this._brightness) return;
 
         // Создаем временный холст
         if (!this._tintImage) {
@@ -137,8 +154,27 @@ export class Frames {
         );
 
         // Накладываем цветовой оттенок
-        this._tintCtx.globalCompositeOperation = 'source-atop';
-        this._tintCtx.fillStyle = this._tint;
-        this._tintCtx.fillRect(0, 0, frame.w, frame.h);
+        if (this._tint) {
+            this._tintCtx.globalCompositeOperation = 'source-atop';
+            this._tintCtx.fillStyle = this._tint;
+            this._tintCtx.fillRect(0, 0, frame.w, frame.h);
+        }
+
+        // Определяем цвет и прозрачность для эффекта освещения
+        if (this._brightness) {
+            let overlayColor;
+            if (this._brightness > 0.5) {
+                // Для осветления используем белый цвет с прозрачностью, пропорциональной яркости
+                overlayColor = `rgba(255, 255, 255, ${2 * (this._brightness - 0.5)})`;
+            } else {
+                // Для затемнения используем черный цвет с прозрачностью, пропорциональной обратной яркости
+                overlayColor = `rgba(0, 0, 0, ${1 - this._brightness * 2})`;
+            }
+
+            // Накладываем цвет освещения
+            this._tintCtx.globalCompositeOperation = 'source-atop';
+            this._tintCtx.fillStyle = overlayColor;
+            this._tintCtx.fillRect(0, 0, frame.w, frame.h);
+        }
     }
 }

@@ -50,8 +50,8 @@ export class Tank extends Group {
 
         this.bodySprite = new Sprite(game, 'tank', 0, 0);
         this.bodySprite.atlas.frameName = 'body';
-        this.bodySprite.tintColor = { r: 4, g: 6, b: 2 };
-        this.bodySprite.tintOpacity = 0.5;
+        this.bodySprite.tintColor = { r: 50, g: 100, b: 32 };
+        this.bodySprite.tintOpacity = 0.2;
 
         this.add(this.bodySprite);
 
@@ -61,8 +61,8 @@ export class Tank extends Group {
         this.towerSprite = new Sprite(game, 'tank', 0, 5);
         this.towerSprite.atlas.frameName = 'tower';
         this.towerSprite.pivot.y = 0.78;
-        this.towerSprite.tintColor = { r: 6, g: 9, b: 3 };
-        this.towerSprite.tintOpacity = 0.5;
+        this.towerSprite.tintColor = { r: 50, g: 100, b: 32 };
+        this.towerSprite.tintOpacity = 0.2;
         this.tower.add(this.towerSprite);
 
         this.fireSprite = new Sprite(game, 'gunflash', 0, -105);

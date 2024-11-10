@@ -21,6 +21,14 @@ export class Sprite extends DisplayObject {
 		this.atlas.tint = value;
 	}
 
+	get tintBrightness() {
+		return this.atlas.tintBrightness;
+	}
+
+	set tintBrightness(value) {
+		this.atlas.tintBrightness = value;
+	}
+
 	update() {
 
 	}

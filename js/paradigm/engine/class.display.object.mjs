@@ -11,6 +11,7 @@ export class DisplayObject {
 	_tint;
 	_tintColor;
 	_tintOpacity;
+	_tintBrightness;
 	smoothing = false;
 	visible = true;
 	mustDestroyed = false;
@@ -90,14 +91,14 @@ export class DisplayObject {
 	}
 
 	set tintColor(value) {
-		if(!value){
+		if (!value) {
 			this._tintColor = undefined;
 			this.tint = undefined;
 			return;
 		}
 
 		const isTintColorChanged = !this._tintColor || this._tintColor.toString() !== value.toString();
-		if(!isTintColorChanged) return;
+		if (!isTintColorChanged) return;
 
 		this._tintColor = value;
 		this.#setCalculatedTint(this._tintColor, this._tintOpacity);
@@ -108,21 +109,34 @@ export class DisplayObject {
 	}
 
 	set tintOpacity(value) {
-		if(!isFinite(value)){
+		if (!isFinite(value)) {
 			this._tintOpacity = undefined;
 			this.tint = undefined;
 			return;
-		}		
-		
+		}
+
 		const isTintOpacityChanged = !isFinite(this._tintOpacity) || this._tintOpacity !== value;
-		if(!isTintOpacityChanged) return;
+		if (!isTintOpacityChanged) return;
 
 		this._tintOpacity = value;
 		this.#setCalculatedTint(this._tintColor, this._tintOpacity);
 	}
 
-	#setCalculatedTint(){
-		if(!this._tintColor || !isFinite(this._tintOpacity)){
+	get tintBrightness() {
+		return this._tintBrightness;
+	}
+
+	set tintBrightness(value) {
+		if (!isFinite(value)) {
+			this._tintBrightness = undefined;
+			this.tint = undefined;
+			return;
+		}
+		this._tintBrightness = tintBrightness;
+	}
+
+	#setCalculatedTint() {
+		if (!this._tintColor || !isFinite(this._tintOpacity)) {
 			this.tint = undefined;
 			return;
 		}

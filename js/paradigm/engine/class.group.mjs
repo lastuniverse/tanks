@@ -40,6 +40,15 @@ export class Group extends DisplayObject {
         });
     }
 
+    set tintBrightness(value) {
+        this._tintBrightness = value;
+        this.#childrens.forEach(item => {
+            if (!item.visible) return;
+            if (item.mustDestroyed) return;
+            item.tintBrightness = value;
+        });
+    }
+
     clear() {
         this.#childrens = [];
     }

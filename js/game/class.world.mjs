@@ -16,7 +16,7 @@ bus.once('engine.create', game => {
 
 export class World extends Group {
     frames = [4, 4, 4, 4, 5, 5, 7, 7, 8];
-    spriteSize = 100;;
+    spriteSize = 115;
     chankSize;
     chanks = {};
     worldWidth;
@@ -66,8 +66,8 @@ export class World extends Group {
         sprite.scale.x *= Math.round(prng.random(worldX, worldY, 1)) * 2 - 1;
         sprite.angle = Math.floor(prng.random(worldX, worldY, 3) * 360);
         sprite.atlas.frame = this.frames[Math.floor(prng.random(worldX, worldY) * this.frames.length)];
-        sprite.tintColor = {r: 3, g: 2, b: 1};
-        sprite.tintOpacity = 0.5;
+        // sprite.tintColor = {r: 96, g: 64, b: 32};
+        sprite.tintBrightness = 0.5;
 
         return sprite;
     }
@@ -129,12 +129,11 @@ export class World extends Group {
     calculateLighting(timer) {
         const period = 1000 * 60 * 2;
         const time = (timer % period) / period;
-        const lighting = 0.9 * Math.abs(Math.sin(time * Math.PI * 2));
-        const tintOpacity = Math.floor(lighting * 100) / 100;
+        const lighting = 0.1 + 0.4 * Math.abs(Math.sin(time * Math.PI * 2));
+        const brightness = Math.floor(lighting * 100) / 100;
 
-        if(tintOpacity === this.tintOpacity) return;
-
-        this.tintOpacity = tintOpacity;
+        if (brightness === this.tintBrightness) return;
+        this.tintBrightness = brightness;
     }
 
     update(timer) {
