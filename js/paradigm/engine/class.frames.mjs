@@ -1,10 +1,12 @@
 export class Frames {
     #frame;
     #frameName = 'default';
+    _tint;
+    _tintImage;
 
     constructor(image, data) {
         this.image = image;
-        
+
         if (data) {
             this.setAtlasData(data);
         } else {
@@ -47,6 +49,17 @@ export class Frames {
         }
     }
 
+    get tint() {
+        return this._tint;
+    }
+
+    set tint(value) {
+        // if(this._tint && this._tint !== value){
+        this._tint = value;
+        this.generateTintedFrame();
+        // }            
+    }
+
     get frame() {
         return this.#frame;
     }
@@ -55,11 +68,12 @@ export class Frames {
         if (typeof value === 'number') {
             const frame = this.frameDataList[value];
             if (!frame) return;
+            if (this.#frame === frame) return;
             this.#frame = frame;
             this.#frameName = frame.name;
             this.width = frame.frame.w;
             this.height = frame.frame.h;
-
+            this.generateTintedFrame();
         } else {
             this.frameName = value;
         }
@@ -70,14 +84,15 @@ export class Frames {
     }
 
     set frameName(value) {
-        if (typeof value === 'string') {
-            const frame = this.frameDataHash[value];
-            if (!frame) return;
-            this.#frame = frame;
-            this.#frameName = value;
-            this.width = frame.frame.w;
-            this.height = frame.frame.h;
-        }
+        if (typeof value !== 'string') return;
+        if (this.#frameName === value) return;
+        const frame = this.frameDataHash[value];
+        if (!frame) return;
+        this.#frame = frame;
+        this.#frameName = value;
+        this.width = frame.frame.w;
+        this.height = frame.frame.h;
+        this.generateTintedFrame();
     }
 
     setAtlasData(data) {
@@ -86,19 +101,44 @@ export class Frames {
             this.frameDataHash[key].name = key;
             return this.frameDataHash[key];
         });
-        this.#frame = this.frameDataList[0];
-        this.#frameName = this.#frame.name;
-        this.width = this.#frame.frame.w;
-        this.height = this.#frame.frame.h;
+        this.frame = 0;
     }
 
     draw(context, x, y, w, h) {
         const frame = this.#frame.frame;
-        context.drawImage(this.image,
-            frame.x, frame.y,
+        context.drawImage(this._tintImage ?? this.image,
+            this._tintImage ? 0 : frame.x,
+            this._tintImage ? 0 : frame.y,
             frame.w, frame.h,
             x, y,
             w, h
         );
+    }
+
+    generateTintedFrame() {
+        if (!this._tint) return;
+
+        // Создаем временный холст
+        if (!this._tintImage) {
+            this._tintImage = document.createElement('canvas');
+            this._tintCtx = this._tintImage.getContext('2d');
+        }
+
+        // Рисуем изображение на временном холсте
+        const frame = this.#frame.frame;
+        this._tintImage.width = frame.w;
+        this._tintImage.height = frame.h;
+
+        this._tintCtx.drawImage(this.image,
+            frame.x, frame.y,
+            frame.w, frame.h,
+            0, 0,
+            frame.w, frame.h
+        );
+
+        // Накладываем цветовой оттенок
+        this._tintCtx.globalCompositeOperation = 'source-atop';
+        this._tintCtx.fillStyle = this._tint;
+        this._tintCtx.fillRect(0, 0, frame.w, frame.h);
     }
 }

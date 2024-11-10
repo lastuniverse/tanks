@@ -12,7 +12,6 @@ bus.once('engine.preload', game => {
 });
 
 bus.once('engine.create', game => {
-    game.loader.image.tint('tank_color', 'tank', 0.25, 0.2, 1.0, 0.1);
 });
 
 const tanks = {
@@ -49,18 +48,19 @@ export class Tank extends Group {
 
         this.shotSound = game.loader.audio.get('shoot');
 
-        const color = '_color';
-
-        this.bodySprite = new Sprite(game, 'tank' + color, 0, 0);
+        this.bodySprite = new Sprite(game, 'tank', 0, 0);
         this.bodySprite.atlas.frameName = 'body';
+        this.bodySprite.tint = 'rgba(50, 100, 32, 0.2)';
+        
         this.add(this.bodySprite);
 
         this.tower = new Group(game, 0, 5);
         this.add(this.tower);
 
-        this.towerSprite = new Sprite(game, 'tank' + color, 0, 5);
+        this.towerSprite = new Sprite(game, 'tank', 0, 5);
         this.towerSprite.atlas.frameName = 'tower';
         this.towerSprite.pivot.y = 0.78;
+        this.towerSprite.tint = 'rgba(50, 100, 32, 0.2)';
         this.tower.add(this.towerSprite);
 
         this.fireSprite = new Sprite(game, 'gunflash', 0, -105);
@@ -85,7 +85,7 @@ export class Tank extends Group {
         this.#fire = true;
         this.#fireTime = 0;
 
-        this.shotSound.play();
+        this.shotSound?.play();
 
         const dx = this.game.mouse.x - this.game.width / 2;
         const dy = this.game.mouse.y - this.game.height / 2;

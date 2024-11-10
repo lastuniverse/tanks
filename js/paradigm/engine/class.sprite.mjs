@@ -2,7 +2,6 @@ import { TransfotmationObject } from './class.transformation.object.mjs'
 import { Frames } from './class.frames.mjs'
 
 export class Sprite extends TransfotmationObject {
-
 	constructor(game, name, x, y) {
 		super(game);
 		this.position = { x, y };
@@ -11,7 +10,14 @@ export class Sprite extends TransfotmationObject {
 		if (!atlas) throw `Image with name '${name}' not found in cache. You must download it before using it.`
 
 		this.atlas = new Frames(atlas.image, atlas);
+	}
 
+	get tint () {
+		return this.atlas.tint;
+	}
+
+	set tint(value) {
+		this.atlas.tint = value;
 	}
 
 	update() {
