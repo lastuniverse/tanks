@@ -1,6 +1,6 @@
-import { TransfotmationObject } from './class.transformation.object.mjs'
+import { DisplayObject } from './class.display.object.mjs'
 
-export class Group extends TransfotmationObject {
+export class Group extends DisplayObject {
     #childrens = [];
 
     constructor(game, x, y) {
@@ -13,13 +13,42 @@ export class Group extends TransfotmationObject {
         return this.#childrens;
     }
 
+    set tint(value) {
+        this._tint = value;
+        this.#childrens.forEach(item => {
+            if (!item.visible) return;
+            if (item.mustDestroyed) return;
+            item.tint = value;
+        });
+    }
+
+    set tintOpacity(value) {
+        this._tintOpacity = value;
+        this.#childrens.forEach(item => {
+            if (!item.visible) return;
+            if (item.mustDestroyed) return;
+            item.tintOpacity = value;
+        });
+    }
+
+    set tintColor(value) {
+        this._tintColor = value;
+        this.#childrens.forEach(item => {
+            if (!item.visible) return;
+            if (item.mustDestroyed) return;
+            item.tintColor = value;
+        });
+    }
+
     clear() {
         this.#childrens = [];
     }
 
     add(item) {
-        if (item instanceof TransfotmationObject)
+        if (item instanceof DisplayObject) {
             this.#childrens.push(item);
+            item.item = this._tint;
+        }
         item.parent = this;
     }
 

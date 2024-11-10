@@ -54,10 +54,9 @@ export class Frames {
     }
 
     set tint(value) {
-        // if(this._tint && this._tint !== value){
+        if(this._tint == value) return;
         this._tint = value;
         this.generateTintedFrame();
-        // }            
     }
 
     get frame() {
@@ -106,9 +105,10 @@ export class Frames {
 
     draw(context, x, y, w, h) {
         const frame = this.#frame.frame;
-        context.drawImage(this._tintImage ?? this.image,
-            this._tintImage ? 0 : frame.x,
-            this._tintImage ? 0 : frame.y,
+        context.drawImage(
+            this._tint ? this._tintImage : this.image,
+            this._tint ? 0 : frame.x,
+            this._tint ? 0 : frame.y,
             frame.w, frame.h,
             x, y,
             w, h

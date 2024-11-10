@@ -1,7 +1,8 @@
-import { TransfotmationObject } from './class.transformation.object.mjs'
+import { DisplayObject } from './class.display.object.mjs'
 import { Frames } from './class.frames.mjs'
 
-export class Sprite extends TransfotmationObject {
+export class Sprite extends DisplayObject {
+
 	constructor(game, name, x, y) {
 		super(game);
 		this.position = { x, y };
@@ -12,7 +13,7 @@ export class Sprite extends TransfotmationObject {
 		this.atlas = new Frames(atlas.image, atlas);
 	}
 
-	get tint () {
+	get tint() {
 		return this.atlas.tint;
 	}
 
