@@ -1,5 +1,7 @@
 import { DisplayObject } from './class.display.object.mjs'
 import { Frames } from './class.frames.mjs'
+import { ImageLoader } from './class.loader.image.mjs'
+import { urlCache } from './single.url.cache.mjs'
 
 export class Sprite extends DisplayObject {
 
@@ -7,7 +9,7 @@ export class Sprite extends DisplayObject {
 		super(game);
 		this.position = { x, y };
 
-		const atlas = game.loader.image.cache.get(name);
+		const atlas = urlCache.get(ImageLoader.cacheName, name);
 		if (!atlas) throw `Image with name '${name}' not found in cache. You must download it before using it.`
 
 		this.atlas = new Frames(atlas.image, atlas);
@@ -22,11 +24,11 @@ export class Sprite extends DisplayObject {
 	}
 
 	get tintBrightness() {
-		return this.atlas.tintBrightness;
+		return this.atlas.brightness;
 	}
 
 	set tintBrightness(value) {
-		this.atlas.tintBrightness = value;
+		this.atlas.brightness = value;
 	}
 
 	update() {

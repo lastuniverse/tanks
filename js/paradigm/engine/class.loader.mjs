@@ -1,16 +1,14 @@
 import ExtendEventEmitter from '../../tools/class.extend.event.emitter.mjs'
-import { Cache } from './class.cache.mjs'
-
-export const cacheURLs = new Cache();
+import { urlCache } from './single.url.cache.mjs'
 
 export class Loader extends ExtendEventEmitter {
+    static cacheName = "images";
     #amount = 0;
     #count = 0;
     #baseURL = '/';
 
     constructor(baseURL = '/') {
         super();
-        this.cache = new Cache();
         this.baseURL = baseURL;
     }
 
@@ -61,7 +59,7 @@ export class Loader extends ExtendEventEmitter {
     get baseURL() {
         return this.#baseURL;
     }
-    
+
     set baseURL(value) {
         if (typeof value !== 'string') throw `URL must be a non-empty string'`;
         this.#baseURL = value;
@@ -71,8 +69,7 @@ export class Loader extends ExtendEventEmitter {
     load(url) {
         console.log('load', url)
 
-        const data = this.cache.get(url);
-        if(data) return data;
+        if (urlCache.has(Loader.cacheName, url)) return urlCache.get(Loader.cacheName, url);
 
         this.amount++;
 
@@ -82,12 +79,12 @@ export class Loader extends ExtendEventEmitter {
                 return response;
             });
 
-        this.cache.insert(url, promise);
+        urlCache.set(Loader.cacheName, url, promise);
         return promise;
     }
 
     get(name) {
-        return this.cache.get(name);
+        return urlCache.get(Loader.cacheName, name);
     }
 
 }

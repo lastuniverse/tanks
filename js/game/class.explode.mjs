@@ -1,4 +1,6 @@
 import { Group, Sprite } from '../paradigm/engine/index.mjs'
+import { AudioLoader } from '../paradigm/engine/index.mjs'
+import { urlCache } from '../paradigm/engine/single.url.cache.mjs'
 import bus from '../tools/tool.events.bus.mjs'
 
 bus.once('engine.init', game => {
@@ -21,7 +23,7 @@ export class Explode extends Group {
         super(game, position.x, position.y);
         this.#startTime = time / 2;
         this.visible = false;
-        this.explodeSound = game.loader.audio.get('explode');
+        this.explodeSound = urlCache.get(AudioLoader.cacheName, 'explode');
 
         const sign = Math.round(Math.random()) * 2 - 1
 

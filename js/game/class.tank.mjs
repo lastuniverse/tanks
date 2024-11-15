@@ -1,4 +1,6 @@
 import { Group, Sprite, Point } from '../paradigm/engine/index.mjs'
+import { AudioLoader } from '../paradigm/engine/index.mjs'
+import { urlCache } from '../paradigm/engine/single.url.cache.mjs'
 import { Explode } from './class.explode.mjs'
 import bus from '../tools/tool.events.bus.mjs'
 
@@ -46,8 +48,8 @@ export class Tank extends Group {
     constructor(game, group, x, y) {
         super(game, x, y);
 
-        this.shotSound = game.loader.audio.get('shoot');
-
+        this.shotSound = urlCache.get(AudioLoader.cacheName, 'shoot');
+        
         this.bodySprite = new Sprite(game, 'tank', 0, 0);
         this.bodySprite.atlas.frameName = 'body';
         this.bodySprite.tintColor = { r: 50, g: 100, b: 32 };

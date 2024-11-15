@@ -130,7 +130,7 @@ export class World extends Group {
         const period = 1000 * 60 * 2;
         const time = (timer % period) / period;
         const lighting = 0.1 + 0.4 * Math.abs(Math.sin(time * Math.PI * 2));
-        const brightness = Math.floor(lighting * 100) / 100;
+        const brightness = Math.floor(lighting * 256) / 256;
 
         if (brightness === this.tintBrightness) return;
         this.tintBrightness = brightness;

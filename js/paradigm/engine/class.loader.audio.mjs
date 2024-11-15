@@ -1,7 +1,9 @@
 import { Loader } from './class.loader.mjs'
 import { audioContext, Sound } from './class.sound.mjs'
+import { urlCache } from './single.url.cache.mjs'
 
 export class AudioLoader extends Loader {
+    static cacheName = "sounds";
 
     constructor(loader) {
         super();
@@ -19,7 +21,7 @@ export class AudioLoader extends Loader {
 
     load(name, audioURL) {
         if (!name || typeof name !== 'string') throw `Name must be a non-empty string`;
-        if (this.cache.get(name)) throw `Image with name '${name}' already loaded. Change image name for load.`;
+        if (urlCache.has(AudioLoader.cacheName, name)) throw `Image with name '${name}' already loaded. Change image name for load.`;
 
         this.amount++;
 
@@ -28,7 +30,7 @@ export class AudioLoader extends Loader {
             .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
             .then(audioBuffer => {
                 this.count++;
-                this.cache.insert(name, new Sound(audioBuffer));
+                urlCache.set(AudioLoader.cacheName, name, new Sound(audioBuffer));
             });
     }
 }

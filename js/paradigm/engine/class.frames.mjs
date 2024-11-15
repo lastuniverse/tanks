@@ -1,3 +1,5 @@
+const coloredFrames = {};
+
 export class Frames {
     #frame;
     #frameName = 'default';
@@ -11,31 +13,7 @@ export class Frames {
         if (data) {
             this.setAtlasData(data);
         } else {
-            this.#frame = {
-                name: 'default',
-                frame: {
-                    x: 0,
-                    y: 0,
-                    w: this.image.width,
-                    h: this.image.height
-                },
-                rotated: false,
-                trimmed: false,
-                spriteSourceSize: {
-                    x: 0,
-                    y: 0,
-                    w: this.image.width,
-                    h: this.image.height
-                },
-                sourceSize: {
-                    w: this.image.width,
-                    h: this.image.height
-                },
-                pivot: {
-                    x: 0.5,
-                    y: 0.5
-                },
-            };
+            this.#frame = this.getDefaultFrameData(this.image);
 
             this.frameDataHash = {
                 default: this.#frame
@@ -50,6 +28,34 @@ export class Frames {
         }
     }
 
+    getDefaultFrameData(image){
+        return {
+            name: 'default',
+            frame: {
+                x: 0,
+                y: 0,
+                w: image.width,
+                h: image.height
+            },
+            rotated: false,
+            trimmed: false,
+            spriteSourceSize: {
+                x: 0,
+                y: 0,
+                w: image.width,
+                h: image.height
+            },
+            sourceSize: {
+                w: image.width,
+                h: image.height
+            },
+            pivot: {
+                x: 0.5,
+                y: 0.5
+            }
+        };
+    }
+
     get tint() {
         return this._tint;
     }
@@ -57,14 +63,13 @@ export class Frames {
     set tint(value) {
         if (this._tint == value) return;
         this._tint = value;
-        this.generateTintedFrame();
     }
 
-    get tintBrightness() {
+    get brightness() {
         return this._brightness ?? 0.5;
     }
 
-    set tintBrightness(value) {
+    set brightness(value) {
         if (!isFinite(value)) {
             this._brightness = undefined
             return;
@@ -72,7 +77,6 @@ export class Frames {
         value = Math.min(1, Math.max(0, value));
         if (this._brightness == value) return;
         this._brightness = value;
-        this.generateTintedFrame();
     }
 
     get frame() {
@@ -88,7 +92,6 @@ export class Frames {
             this.#frameName = frame.name;
             this.width = frame.frame.w;
             this.height = frame.frame.h;
-            this.generateTintedFrame();
         } else {
             this.frameName = value;
         }
@@ -107,7 +110,6 @@ export class Frames {
         this.#frameName = value;
         this.width = frame.frame.w;
         this.height = frame.frame.h;
-        this.generateTintedFrame();
     }
 
     setAtlasData(data) {
@@ -123,7 +125,7 @@ export class Frames {
         const frame = this.#frame.frame;
         const isTinted = this._tint || isFinite(this._brightness);
         context.drawImage(
-            isTinted ? this._tintImage : this.image,
+            this.getFrameImage(),
             isTinted ? 0 : frame.x,
             isTinted ? 0 : frame.y,
             frame.w, frame.h,
@@ -132,21 +134,35 @@ export class Frames {
         );
     }
 
-    generateTintedFrame() {
-        if (!this._tint && !this._brightness) return;
+    getFrameImage() {
+        if (!this._tint && !this._brightness) return this.image;
+
+        let tintedFrame = coloredFrames[this.image.src]?.[this.#frameName];
+        if (tintedFrame && tintedFrame.tint === this._tint && tintedFrame.brightness === this._brightness) return tintedFrame.image;
 
         // Создаем временный холст
-        if (!this._tintImage) {
-            this._tintImage = document.createElement('canvas');
-            this._tintCtx = this._tintImage.getContext('2d');
-        }
+        const image = tintedFrame?.image ?? document.createElement('canvas');
+        const context = tintedFrame?.context ?? image.getContext('2d');
+
+        this._tintImage = image;
+
+        tintedFrame = {
+            image,
+            context,
+            tint: this._tint,
+            brightness: this._brightness
+        };
+
+
+        coloredFrames[this.image.src] = coloredFrames[this.image.src] ?? {};
+        coloredFrames[this.image.src][this.#frameName] = tintedFrame;
 
         // Рисуем изображение на временном холсте
         const frame = this.#frame.frame;
-        this._tintImage.width = frame.w;
-        this._tintImage.height = frame.h;
+        image.width = frame.w;
+        image.height = frame.h;
 
-        this._tintCtx.drawImage(this.image,
+        context.drawImage(this.image,
             frame.x, frame.y,
             frame.w, frame.h,
             0, 0,
@@ -155,9 +171,10 @@ export class Frames {
 
         // Накладываем цветовой оттенок
         if (this._tint) {
-            this._tintCtx.globalCompositeOperation = 'source-atop';
-            this._tintCtx.fillStyle = this._tint;
-            this._tintCtx.fillRect(0, 0, frame.w, frame.h);
+            context.globalCompositeOperation = 'source-atop';
+            // context.globalCompositeOperation = 'multiply';
+            context.fillStyle = this._tint;
+            context.fillRect(0, 0, frame.w, frame.h);
         }
 
         // Определяем цвет и прозрачность для эффекта освещения
@@ -172,9 +189,11 @@ export class Frames {
             }
 
             // Накладываем цвет освещения
-            this._tintCtx.globalCompositeOperation = 'source-atop';
-            this._tintCtx.fillStyle = overlayColor;
-            this._tintCtx.fillRect(0, 0, frame.w, frame.h);
+            context.globalCompositeOperation = 'source-atop';
+            context.fillStyle = overlayColor;
+            context.fillRect(0, 0, frame.w, frame.h);
         }
+
+        return image;
     }
 }

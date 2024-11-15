@@ -1,8 +1,10 @@
 import { tint } from '../../tools/image.tint.mjs'
 import { Loader} from './class.loader.mjs'
 import { Frames } from './class.frames.mjs'
+import { urlCache } from './single.url.cache.mjs'
 
 export class ImageLoader extends Loader {
+    cacheName = "images";
 
     constructor(loader) {
         super();
@@ -19,7 +21,7 @@ export class ImageLoader extends Loader {
 
     load(name, imageURL, atlasURL) {
         if (!name || typeof name !== 'string') throw `Name must be a non-empty string`;
-        if (this.cache.get(name)) throw `Image with name '${name}' already loaded. Change image name for load.`;
+        if (urlCache.has(ImageLoader.cacheName, name)) throw `Image with name '${name}' already loaded. Change image name for load.`;
 
         this.amount++;
         const img = new Image();
@@ -33,7 +35,7 @@ export class ImageLoader extends Loader {
                     img.addEventListener('load', () => {
                         const frames = new Frames(img);
                         frames.setAtlasData(data);
-                        this.cache.insert(name, frames);
+                        urlCache.set(ImageLoader.cacheName, name, frames);
                         this.count++;
                     }, false);
 
@@ -43,7 +45,7 @@ export class ImageLoader extends Loader {
             const img = new Image();
             img.addEventListener('load', () => {
                 const frames = new Frames(img);
-                this.cache.insert(name, frames);
+                urlCache.set(ImageLoader.cacheName, name, frames)
                 this.count++;
             }, false);
 
@@ -55,16 +57,16 @@ export class ImageLoader extends Loader {
 
     tint(name, sourceName, hue = 0.5, saturation = 1, white = 1, black = 0) {
         if (!name || typeof name !== 'string') throw `Name must be a non-empty string`;
-        if (this.cache.get(name)) throw `Image with name '${name}' already exists. Change image name for use tint().`;
+        if (urlCache.has(ImageLoader.cacheName, name)) throw `Image with name '${name}' already exists. Change image name for use tint().`;
 
         if (!sourceName || typeof sourceName !== 'string') throw `SourceName must be a non-empty string`;
-        const sourceFrames = this.cache.get(sourceName);
+        const sourceFrames = urlCache.get(ImageLoader.cacheName, sourceName);
 
         if (!sourceFrames) throw `Image with sourceName '${sourceName}' not found in cache. You must download it before using it.`
 
         const destinationImage = tint(sourceFrames.image, hue, saturation, white, black);
         const destinationFrames = new Frames(destinationImage, sourceFrames);
 
-        this.cache.insert(name, destinationFrames);
+        urlCache.set(ImageLoader.cacheName, name, destinationFrames);
     }
 }

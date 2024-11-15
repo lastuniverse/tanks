@@ -1,30 +1,71 @@
 export class Cache {
+    #data = new Map();
 
     constructor() {
-        this.list = {};
     }
 
-    insert(name, data) {
-        if (data === undefined) throw `Data for cache item '${name}' cannot be undefined.`;
-        if (!name || typeof name !== 'string') throw `Name of cache item must be a non-empty string.`;
-        if (this.list[name]) throw `Item name '${name}' is allready exists in cache.`;
-        this.list[name] = data;
-        return data;
+    has(...keys) {
+        let data = this.#data;
+        
+        return keys.every(key => {
+            if (!data.has(key)) return false;
+            data = data.get(key);
+            return true;
+        });
     }
 
-    delete(name) {
-        const data = this.list[name];
-        delete this.list[name];
-        return data;
+    set(...keys) {
+        if (keys.length < 2) throw 'The method requires at least two arguments - a key and a value.';
+        
+        const value = keys.pop();
+        if (value === undefined) throw `Data for cache item '${name}' cannot be undefined.`;
+
+        let data = this.#data;
+
+        return keys.forEach((key, index) => {
+            const isLast = index + 1 === keys.length;
+            const isPresent = data.has(key);
+
+            if (isLast) {
+                data.set(key, value)
+            } else if (isPresent) {
+                data = data.get(key);
+            } else {
+                const nextData = new Map();
+                data.set(key, nextData)
+                data = nextData;
+            };
+        });
     }
 
-    replace(name, data) {
-        this.delete(name);
-        this.insert(name, data);
-        return data;
+    get(...keys) {
+        if (!keys.length) throw 'The method requires at least one argument.';
+
+        let data = this.#data;
+        
+        const isPresent = keys.every(key => {
+            if (!data.has(key)) return false;
+            data = data.get(key);
+            return true;
+        });
+
+        return isPresent ? data : undefined;
     }
 
-    get(name) {
-        return this.list[name];
+    delete(...keys) {
+        if (!keys.length) throw 'The method requires at least one argument.';
+
+        const lastKey = keys.pop();
+        const data = get(...keys);
+        data?.delete(lastKey);
+    }
+
+    clear(...keys) {
+        let data = keys.length ? get(...keys) : this.#data;
+        data?.clear();
+    }
+
+    get size(){
+        return this.#data.size;
     }
 }
