@@ -20,7 +20,7 @@ export class World extends Group {
     chankSize;
     chanks = {};
     worldWidth;
-    worldWidth;
+    worldHeight;
 
     focus = {
         position: new Point(0, 0)

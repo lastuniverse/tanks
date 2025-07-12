@@ -8,7 +8,6 @@ import { Mouse } from './class.mouse.mjs'
 import { Point } from './class.point.mjs'
 import { Group } from './class.group.mjs'
 
-
 export class Game extends ExtendEventEmitter {
     #scenes = {};
     #scenesList = [];
@@ -99,13 +98,17 @@ export class Game extends ExtendEventEmitter {
     resize(width = Math.floor(window.innerWidth), height = Math.floor(window.innerHeight)) {
         this.width = width;
         this.height = height;
-        this.canvas.width = this.width;
-        this.canvas.height = this.height;
+        this.canvas.width = width;
+        this.canvas.height = height;
+        this.canvas.style.width = width + 'px';
+        this.canvas.style.height = height + 'px';        
     }
 
     #loop(timer, time, frame) {
         this.context.setTransform(1, 0, 0, 1, 0, 0);
         this.context.clearRect(0, 0, this.width, this.height);
+        this.context.fillStyle = '#088';
+        this.context.fillRect(0, 0, this.width, this.height);
 
         this.emit('engine.update', timer);
         this.bus.emit('engine.update', this, timer);
